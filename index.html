@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melisa için Özel...</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body, html {
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* Arka Plan Videosu */
+        #bg-video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: 1;
+            filter: brightness(0.4); /* Yazılar okunsun diye videoyu biraz kararttık */
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            text-shadow: 0 0 20px rgba(255, 77, 109, 0.8);
+            margin-bottom: 20px;
+            transition: 0.5s;
+        }
+
+        #plead-text {
+            height: 30px;
+            font-size: 1.5rem;
+            color: #ffb703;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        #yesBtn {
+            background: #ff4d6d;
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 77, 109, 0.5);
+        }
+
+        #yesBtn:hover { transform: scale(1.2); background: #ff758f; }
+
+        #noBtn {
+            background: #444;
+            color: #eee;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+
+    <video autoplay muted loop id="bg-video">
+        <source src="melisa.mp4" type="video/mp4">
+    </video>
+
+    <audio id="yesMusic" src="evet.mp4"></audio>
+    <audio id="noMusic" src="hayir.mp4"></audio>
+
+    <div class="container">
+        <h1 id="main-title">Fıstık, benimle çıkar mısın? </h1>
+        <div id="plead-text"></div>
+        
+        <div class="buttons">
+            <button id="yesBtn" onclick="accept()">EVET</button>
+            <button id="noBtn" onmouseover="moveAndPlead()" onclick="moveAndPlead()">HAYIR</button>
+        </div>
+    </div>
+
+    <script>
+        let clickCount = 0;
+        const messages = [
+            "Vicdanın rahat mı Melisa?",
+            "Bunu bana gerçekten yapacak mısın?",
+            "Bir kez daha düşün bence...",
+            "Kalbimi mi kıracaksın?",
+            "Son şansın, bak gidiyorum!"
+        ];
+
+        function moveAndPlead() {
+            const noBtn = document.getElementById('noBtn');
+            const pleadText = document.getElementById('plead-text');
+            const noMusic = document.getElementById('noMusic');
+
+            // Hayır şarkısını çal (ilk harekette başlar)
+            noMusic.play();
+
+            if (clickCount < 5) {
+                // Butonu kaçır
+                const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+                const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+                noBtn.style.position = 'fixed';
+                noBtn.style.left = x + 'px';
+                noBtn.style.top = y + 'px';
+
+                // Yalvarma metnini değiştir
+                pleadText.innerText = messages[clickCount];
+                clickCount++;
+            } else {
+                // 5. kereden sonra yok et
+                noBtn.style.display = 'none';
+                pleadText.innerText = "Artık kaçamazsın, Hayır butonu bitti! :)";
+            }
+        }
+
+        function accept() {
+            const title = document.getElementById('main-title');
+            const pleadText = document.getElementById('plead-text');
+            const yesMusic = document.getElementById('yesMusic');
+            const noMusic = document.getElementById('noMusic');
+
+            // Hayır şarkısını durdur, Evet şarkısını çal
+            noMusic.pause();
+            yesMusic.play();
+
+            title.innerHTML = "Seni seviyorum sevgilim";
+            pleadText.innerText = "Kabul edecegini biliyordum";
+            document.querySelector('.buttons').style.display = 'none';
+            document.body.style.background = "rgba(255, 77, 109, 0.3)";
+        }
+    </script>
+</body>
+</html>
